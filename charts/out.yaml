@@ -1,0 +1,247 @@
+NAME: chart-1644963488
+LAST DEPLOYED: Tue Feb 15 23:18:09 2022
+NAMESPACE: fhir-server
+STATUS: pending-install
+REVISION: 1
+TEST SUITE: None
+HOOKS:
+---
+# Source: hapi-fhir-server/templates/serviceaccount-role-rolebinding.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: hapi-fhir-server-read-account
+  namespace: fhir-server
+  labels:
+    helm.sh/chart: hapi-fhir-server-0.0.1
+    app.kubernetes.io/version: "hapi-fhir-server-0.0.1"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "0"
+automountServiceAccountToken: true
+---
+# Source: hapi-fhir-server/templates/serviceaccount-role-rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: hapi-fhir-server-cluster-role
+  namespace: fhir-server
+  labels:
+    helm.sh/chart: hapi-fhir-server-0.0.1
+    app.kubernetes.io/version: "hapi-fhir-server-0.0.1"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "0"
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - endpoints
+      - pods
+      - services
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+---
+# Source: hapi-fhir-server/templates/serviceaccount-role-rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: hapi-fhir-server-cluster-rolebinding
+  namespace: fhir-server
+  labels:
+    helm.sh/chart: hapi-fhir-server-0.0.1
+    app.kubernetes.io/version: "hapi-fhir-server-0.0.1"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "0"
+subjects:
+  - kind: ServiceAccount
+    name: hapi-fhir-server-read-account
+    namespace: fhir-server
+roleRef:
+  kind: ClusterRole
+  name: hapi-fhir-server-cluster-role
+  apiGroup: rbac.authorization.k8s.io
+MANIFEST:
+---
+# Source: hapi-fhir-server/templates/fhir-server-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fhir-server
+  namespace: fhir-server
+  labels:
+    helm.sh/chart: hapi-fhir-server-0.0.1
+    app.kubernetes.io/version: "hapi-fhir-server-0.0.1"
+    app.kubernetes.io/managed-by: Helm
+data:
+  application-kubernetes.yml: |-
+    hapi:
+      fhir:
+       server-address: http://haip.fhir.com/fhir/hapi
+    server:
+      port: 8080
+      servlet:
+        context-path: /fhir
+    management:
+      server:
+        port: 8081
+    logging:
+      config: classpath:logback-spring-json.xml
+      pattern:
+        file: '%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID}){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx'
+---
+# Source: hapi-fhir-server/templates/fhir-server-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    management.port: "8081"
+  name: hapi-fhir-server
+  namespace: fhir-server
+  labels:
+    helm.sh/chart: hapi-fhir-server-0.0.1
+    app.kubernetes.io/version: "hapi-fhir-server-0.0.1"
+    app.kubernetes.io/managed-by: Helm
+    application-type: spring-boot
+    actuator-type: spring-boot-admin
+spec:
+  ports:
+    - name: backend
+      port: 8080
+      targetPort: 8080
+    - name: actuator
+      port: 8081
+      targetPort: 8081
+    - name: hazalcast
+      port: 5701
+      targetPort: 5701
+  selector:
+    app.kubernetes.io/name: "hapi-fhir-server"
+    app.kubernetes.io/instance: "chart-1644963488"
+---
+# Source: hapi-fhir-server/templates/fhir-server-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hapi-fhir-server
+  namespace: fhir-server
+  labels:
+    helm.sh/chart: hapi-fhir-server-0.0.1
+    app.kubernetes.io/version: "hapi-fhir-server-0.0.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: "hapi-fhir-server"
+    app.kubernetes.io/instance: "chart-1644963488"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "hapi-fhir-server"
+      app.kubernetes.io/instance: "chart-1644963488"
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "hapi-fhir-server"
+        app.kubernetes.io/instance: "chart-1644963488"
+      annotations:
+        checksum/configmap-fhir-server: ee8527e0809bcf4eaac740635ff48d3f7c3ae7859ca60e911d283fed208efd7e
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+        - name: hapi-fhir-server
+          image: "hub.docker.com/hapi-fhir-server-build:latest"
+          imagePullPolicy: Always
+          env:
+            - name: INFO_IMAGE_NAME
+              value: hub.docker.com/hapi-fhir-server-build
+            - name: INFO_IMAGE_TAG
+              value: latest
+            - name: SPRING_PROFILES_ACTIVE
+              value: kubernetes
+          ports:
+            - containerPort: 8080
+            - containerPort: 8081
+            - containerPort: 5701
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8081
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8081
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 5
+          lifecycle:
+            preStop:
+              exec:
+                command: [ "sh", "-c", "sleep 10" ]
+          resources: { }
+          volumeMounts:
+            - name: fhir-server-properties
+              mountPath: /etc/config/application-kubernetes.yml
+              readOnly: true
+              subPath: application-kubernetes.yml
+            - name: log-volume
+              mountPath: /log
+      volumes:
+        - name: fhir-server-properties
+          configMap:
+            name: fhir-server
+        - name: log-volume
+          emptyDir: { }
+      imagePullSecrets:
+        - name: hub-regcred
+      restartPolicy: Always
+      serviceAccountName: hapi-fhir-server-read-account
+---
+# Source: hapi-fhir-server/templates/fhir-server-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hapi-fhir-server-ingress
+  namespace: fhir-server
+  labels:
+    helm.sh/chart: hapi-fhir-server-0.0.1
+    app.kubernetes.io/version: "hapi-fhir-server-0.0.1"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "64k"
+    nginx.ingress.kubernetes.io/client-body-buffer-size: "64k"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+    - host: haip.fhir.com
+      http:
+        paths:
+          - path: /fhir/
+            pathType: Prefix
+            backend:
+              service:
+                name: hapi-fhir-server
+                port:
+                  number: 8080
+
+NOTES:
+Project release name is: chart-1644963488.
+
+More detail:
+  $ helm status chart-1644963488 -n fhir-server
+  $ helm get manifest chart-1644963488  -n fhir-server
+
+Uninstall chart:
+  $ helm delete chart-1644963488  -n fhir-server

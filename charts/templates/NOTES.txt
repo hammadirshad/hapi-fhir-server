@@ -1,0 +1,8 @@
+Project release name is:  {{ .Release.Name }}.
+
+More detail:
+  $ helm status {{ .Release.Name }} -n {{ .Release.Namespace }}
+  $ helm get manifest {{ .Release.Name }}  -n {{ .Release.Namespace }}
+
+Uninstall chart:
+  $ helm delete {{ .Release.Name }}  -n {{ .Release.Namespace }}

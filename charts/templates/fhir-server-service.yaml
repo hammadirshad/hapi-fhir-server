@@ -1,0 +1,26 @@
+{{- if (.Values.service.server.enabled) }}
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    management.port: "{{ .Values.service.server.port.management }}"
+  name: {{.Values.server.name}}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "fhir.server.labels" . | nindent 4 }}
+    application-type: spring-boot
+    actuator-type: spring-boot-admin
+spec:
+  ports:
+    - name: backend
+      port: {{ .Values.service.server.port.backend }}
+      targetPort: {{ .Values.deployment.server.container.port.backend }}
+    - name: actuator
+      port: {{ .Values.service.server.port.management }}
+      targetPort: {{ .Values.deployment.server.container.port.management }}
+    - name: hazalcast
+      port: {{ .Values.service.server.port.hazalcast }}
+      targetPort: {{ .Values.deployment.server.container.port.hazalcast }}
+  selector:
+  {{- include "server.selectorLabels" . | nindent 4 }}
+  {{- end }}

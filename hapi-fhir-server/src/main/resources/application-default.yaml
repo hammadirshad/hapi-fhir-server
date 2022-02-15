@@ -1,0 +1,7 @@
+logging:
+  file:
+    name: C:\log\fhir-hapi-server.log
+server:
+  tomcat:
+    accesslog:
+      directory: C:\log\access-logs

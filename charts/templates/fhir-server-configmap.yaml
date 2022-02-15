@@ -1,0 +1,29 @@
+{{- if (.Values.configmap.server.enabled) }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fhir-server
+  namespace: {{ .Release.Namespace }}
+  labels:
+  {{- include "fhir.server.labels" . | nindent 4 }}
+data:
+  application-kubernetes.yml: |-
+    hapi:
+      fhir:
+    {{- if .Values.configmap.https.enabled }}
+        server-address: https://{{ .Values.ingress.host }}/fhir/hapi
+    {{- else }}
+       server-address: http://{{ .Values.ingress.host }}/fhir/hapi
+    {{- end }}
+    server:
+      port: 8080
+      servlet:
+        context-path: /fhir
+    management:
+      server:
+        port: 8081
+    logging:
+      config: classpath:logback-spring-json.xml
+      pattern:
+        file: '%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID}){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx'
+  {{- end }}

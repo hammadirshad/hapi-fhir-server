@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+  liquibase:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: create-drop

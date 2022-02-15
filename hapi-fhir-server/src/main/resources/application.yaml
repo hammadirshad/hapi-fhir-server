@@ -1,0 +1,60 @@
+hapi:
+  fhir:
+    open_api_enabled: true
+    response-highlighter-enabled: true
+    authorization-interceptor-enabled: false
+    etag-support-enabled: false
+    fhir_path-interceptor-enabled: false
+    server-address: http://localhost:8080/hapi
+    profiles:
+      no-basis:
+        name: hl7.fhir.no.basis
+        version: 2.1.1
+        url: https://packages.simplifier.net/${hapi.fhir.profiles.no-basis.name}/${hapi.fhir.profiles.no-basis.version}
+        #path: classpath:packages/${hapi.fhir.profiles.no-basis.name}-${hapi.fhir.profiles.no-basis.version}.tgz
+    validation:
+      requests_enabled: true
+      responses_enabled: false
+logging:
+  file:
+    name: /log/fhir.log
+server:
+  port: 8080
+  http2:
+    enabled: true
+  error:
+    include-message: always
+  tomcat:
+    accesslog:
+      directory: /log/access-logs
+      enabled: false
+      file-date-format: yyyy-MM-dd
+      suffix: .log.json
+      pattern: '{"time_local":"%t", "remote_addr" :"%a", "host" :"%h", "remote_user": "%u",
+             "request-method":"%m", "status": "%s", "body_bytes_sent": "%B", "request_time": "%T",
+             "http_referrer": "%{Referer}i","http_user_agent": "%{User-Agent}i", "request": "%r"},'
+      prefix: access_log_
+  max-http-header-size: 100KB
+management:
+  info:
+    env:
+      enabled: true
+  server:
+    port: 8081
+  endpoint:
+    health:
+      show-details: always
+    heapdump:
+      enabled: false
+    mappings:
+      enabled: false
+    configprops:
+      keys-to-sanitize: [ ".*password$", ".*secret$", ".*key$", ".*token$", ".*credentials.*" ]
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include: '*'
+info:
+  profiles:
+    no-basis-version: ${hapi.fhir.profiles.no-basis.version}

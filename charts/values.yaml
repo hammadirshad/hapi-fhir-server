@@ -1,0 +1,73 @@
+server:
+  name: hapi-fhir-server
+  image:
+    name: hapi-fhir-server-build
+    tag: latest
+
+image:
+  registry: hub.docker.com
+  username: null
+  password: null
+  pullSecretName: hub-regcred
+  pullPolicy: Always
+
+serviceAccount:
+  enabled: true
+  name: hapi-fhir-server-read-account
+
+role:
+  enabled: true
+  name: hapi-fhir-server-cluster-role
+
+roleBinding:
+  enabled: true
+  name: hapi-fhir-server-cluster-rolebinding
+
+deployment:
+  server:
+    enabled: true
+    replicas: 1
+    container:
+      name: hapi-fhir-server
+      port:
+        backend: 8080
+        management: 8081
+        hazalcast: 5701
+    restartPolicy: Always
+
+service:
+  server:
+    enabled: true
+    port:
+      backend: 8080
+      management: 8081
+      hazalcast: 5701
+
+configmap:
+  server:
+    enabled: true
+  https:
+    enabled: false
+
+ingress:
+  class: nginx
+  host: haip.fhir.com
+  tls:
+    enabled: false
+    secretName: ingress-secret
+  server:
+    enabled: true
+    sslRedirect: false
+    rewriteTarget:
+    name: hapi-fhir-server-ingress
+
+storage:
+  enabled: false
+  log:
+    link: false
+    name: log-volume
+    size: 1Gi
+    # Name of the storage class to use. If null then default.
+    storageClass: null
+    # ReadWriteMany if multi node cluster supported by azurefile
+    accessMode: ReadWriteOnce

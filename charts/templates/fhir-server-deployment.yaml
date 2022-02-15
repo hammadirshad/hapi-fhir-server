@@ -1,0 +1,74 @@
+{{- if (.Values.deployment.server.enabled) }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.server.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+  {{- include "fhir.server.labels" . | nindent 4 }}
+  {{- include "server.selectorLabels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.deployment.server.replicas }}
+  selector:
+    matchLabels:
+  {{- include "server.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+      {{- include "server.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/configmap-fhir-server: {{ include (print $.Template.BasePath "/fhir-server-configmap.yaml") . | sha256sum }}
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+        - name: {{ .Values.deployment.server.container.name }}
+          image: "{{ .Values.image.registry }}/{{ .Values.server.image.name }}:{{ .Values.server.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: INFO_IMAGE_NAME
+              value: {{ .Values.image.registry }}/{{ .Values.server.image.name }}
+            - name: INFO_IMAGE_TAG
+              value: {{ .Values.server.image.tag }}
+          {{- include "spring.application.env" . | nindent 12 }}
+          ports:
+            - containerPort: {{ .Values.deployment.server.container.port.backend }}
+            - containerPort: {{ .Values.deployment.server.container.port.management }}
+            - containerPort: {{ .Values.deployment.server.container.port.hazalcast }}
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: {{ .Values.deployment.server.container.port.management }}
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: {{ .Values.deployment.server.container.port.management }}
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 5
+          lifecycle:
+            preStop:
+              exec:
+                command: [ "sh", "-c", "sleep 10" ]
+          resources: { }
+          volumeMounts:
+            - name: fhir-server-properties
+              mountPath: /etc/config/application-kubernetes.yml
+              readOnly: true
+              subPath: application-kubernetes.yml
+      {{- include "logs.volumeMount" . | nindent 12 }}
+      volumes:
+        - name: fhir-server-properties
+          configMap:
+            name: fhir-server
+      {{- include "logs.volume" . | nindent 8 }}
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecretName }}
+      restartPolicy: {{ .Values.deployment.server.restartPolicy }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+  {{- end }}

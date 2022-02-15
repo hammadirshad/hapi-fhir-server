@@ -1,0 +1,14 @@
+apiVersion: v2
+name: hapi-fhir-server
+version: 0.0.1
+appVersion: hapi-fhir-server-0.0.1
+description: hapi-fhir-server helm chart
+type: application
+keywords:
+  - java
+  - tomcat
+  - hapi-fhir
+  - spring-boot
+maintainers:
+  - name: Muhammad Hammad
+    email: muha@kreftregisteret.no
