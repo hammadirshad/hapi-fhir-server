@@ -34,7 +34,6 @@ spec:
           ports:
             - containerPort: {{ .Values.deployment.server.container.port.backend }}
             - containerPort: {{ .Values.deployment.server.container.port.management }}
-            - containerPort: {{ .Values.deployment.server.container.port.hazalcast }}
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness

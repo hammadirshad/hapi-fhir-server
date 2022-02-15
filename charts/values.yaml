@@ -32,7 +32,6 @@ deployment:
       port:
         backend: 8080
         management: 8081
-        hazalcast: 5701
     restartPolicy: Always
 
 service:
@@ -41,7 +40,6 @@ service:
     port:
       backend: 8080
       management: 8081
-      hazalcast: 5701
 
 configmap:
   server:

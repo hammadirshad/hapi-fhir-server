@@ -18,9 +18,6 @@ spec:
     - name: actuator
       port: {{ .Values.service.server.port.management }}
       targetPort: {{ .Values.deployment.server.container.port.management }}
-    - name: hazalcast
-      port: {{ .Values.service.server.port.hazalcast }}
-      targetPort: {{ .Values.deployment.server.container.port.hazalcast }}
   selector:
   {{- include "server.selectorLabels" . | nindent 4 }}
   {{- end }}
