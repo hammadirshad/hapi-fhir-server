@@ -39,24 +39,24 @@ public class ValidationPackageInitializer {
 
   private List<String> getAllExamples() throws IOException {
     List<String> examples = new ArrayList<>();
-    ProfileImplementations profileImplementations =
-        applicationProperties.getProfiles().get("no-basis");
+    for (ProfileImplementations profileImplementations :
+        applicationProperties.getProfiles().values()) {
+      NpmPackage pkg;
+      if (profileImplementations.getPath() != null) {
+        pkg = getClasspathPackage(profileImplementations);
+      } else {
+        pkg = downloadSimplifierPackage(profileImplementations.getUrl());
+      }
 
-    NpmPackage pkg;
-    if (profileImplementations.getPath() != null) {
-      pkg = getClasspathPackage(profileImplementations);
-    } else {
-      pkg = downloadSimplifierPackage(profileImplementations.getUrl());
-    }
-
-    if (pkg != null) {
-      if (pkg.getFolders().containsKey("examples")) {
-        NpmPackage.NpmPackageFolder packageFolder = pkg.getFolders().get("examples");
-        for (String nextFile : packageFolder.listFiles()) {
-          String example =
-              new String(packageFolder.getContent().get(nextFile), StandardCharsets.UTF_8);
-          if (!example.isBlank()) {
-            examples.add(example);
+      if (pkg != null) {
+        if (pkg.getFolders().containsKey("examples")) {
+          NpmPackage.NpmPackageFolder packageFolder = pkg.getFolders().get("examples");
+          for (String nextFile : packageFolder.listFiles()) {
+            String example =
+                new String(packageFolder.getContent().get(nextFile), StandardCharsets.UTF_8);
+            if (!example.isBlank()) {
+              examples.add(example);
+            }
           }
         }
       }
