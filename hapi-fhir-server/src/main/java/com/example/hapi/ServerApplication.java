@@ -1,6 +1,8 @@
 package com.example.hapi;
 
 import ca.uhn.fhir.rest.server.RestfulServer;
+import com.example.hapi.hapi.config.ApplicationProperties;
+import com.example.hapi.hapi.config.SimpleRestfulServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
@@ -18,11 +20,11 @@ public class ServerApplication {
 
   @Bean
   public ServletRegistrationBean<RestfulServer> hapiServletRegistration(
-      RestfulServer jpaRestfulServer) {
+      ApplicationProperties applicationProperties, SimpleRestfulServer simpleRestfulServer) {
     ServletRegistrationBean<RestfulServer> servletRegistrationBean =
         new ServletRegistrationBean<>();
-    servletRegistrationBean.setServlet(jpaRestfulServer);
-    servletRegistrationBean.addUrlMappings("/hapi/*");
+    servletRegistrationBean.setServlet(simpleRestfulServer);
+    servletRegistrationBean.addUrlMappings(applicationProperties.getServer().getPath() + "/*");
     servletRegistrationBean.setLoadOnStartup(1);
     return servletRegistrationBean;
   }

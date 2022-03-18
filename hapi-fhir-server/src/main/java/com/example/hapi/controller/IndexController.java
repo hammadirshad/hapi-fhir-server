@@ -16,7 +16,7 @@ public class IndexController {
   @RequestMapping
   public RedirectView localRedirect() {
     RedirectView redirectView = new RedirectView();
-    redirectView.setUrl(applicationProperties.getServer_address());
+    redirectView.setUrl(applicationProperties.getServer().getAddress());
     return redirectView;
   }
 }

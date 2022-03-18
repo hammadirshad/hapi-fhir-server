@@ -34,36 +34,36 @@ public class SimpleRestfulServer extends RestfulServer {
     registerProvider(bundleResourceProvider);
 
     /* ResponseHighlighter */
-    if (applicationProperties.isResponse_highlighter_enabled()) {
+    if (applicationProperties.getInterceptor().isResponseHighlighterEnabled()) {
       registerInterceptor(new ResponseHighlighterInterceptor());
     }
     /* Open_api */
-    if (applicationProperties.isOpen_api_enabled()) {
+    if (applicationProperties.getInterceptor().isOpenApiEnabled()) {
       registerInterceptor(new SimpleOpenApiInterceptor());
     }
 
     /* Authorization */
-    if (applicationProperties.isAuthorization_interceptor_enabled()) {
+    if (applicationProperties.getInterceptor().isAuthorizationEnabled()) {
       registerInterceptor(simpleAuthorizationInterceptor);
     }
 
     /*FhirPathFilter */
-    if (applicationProperties.isFhir_path_interceptor_enabled()) {
+    if (applicationProperties.getInterceptor().isFhirPathFilterEnabled()) {
       registerInterceptor(new FhirPathFilterInterceptor());
     }
 
     /* ETag */
     setETagSupport(
-        applicationProperties.isEtag_support_enabled()
+        applicationProperties.isEtagSupportEnabled()
             ? ETagSupportEnum.ENABLED
             : ETagSupportEnum.DISABLED);
 
-    setDefaultPrettyPrint(applicationProperties.isDefault_pretty_print());
+    setDefaultPrettyPrint(applicationProperties.isDefaultPrettyPrint());
 
-    setDefaultResponseEncoding(applicationProperties.getDefault_encoding());
+    setDefaultResponseEncoding(applicationProperties.getDefaultEncoding());
 
     /*Validation*/
-    if (applicationProperties.getValidation().isRequests_enabled()) {
+    if (applicationProperties.getValidation().isRequestsEnabled()) {
       RequestValidatingInterceptor requestInterceptor = new RequestValidatingInterceptor();
       requestInterceptor.addValidatorModule(fhirInstanceValidator);
       requestInterceptor.setFailOnSeverity(ResultSeverityEnum.ERROR);
@@ -73,7 +73,7 @@ public class SimpleRestfulServer extends RestfulServer {
       registerInterceptor(requestInterceptor);
     }
 
-    if (applicationProperties.getValidation().isResponses_enabled()) {
+    if (applicationProperties.getValidation().isResponsesEnabled()) {
       ResponseValidatingInterceptor responseInterceptor = new ResponseValidatingInterceptor();
       responseInterceptor.addValidatorModule(fhirInstanceValidator);
       responseInterceptor.setFailOnSeverity(ResultSeverityEnum.ERROR);
@@ -83,16 +83,16 @@ public class SimpleRestfulServer extends RestfulServer {
       registerInterceptor(responseInterceptor);
     }
 
-    if (applicationProperties.getLogger().isLogging_enabled()) {
+    if (applicationProperties.getLogger().isLoggingEnabled()) {
       LoggingInterceptor loggingInterceptor = new LoggingInterceptor();
       loggingInterceptor.setLoggerName(applicationProperties.getLogger().getName());
       loggingInterceptor.setMessageFormat(applicationProperties.getLogger().getFormat());
       loggingInterceptor.setErrorMessageFormat(applicationProperties.getLogger().getError_format());
-      loggingInterceptor.setLogExceptions(applicationProperties.getLogger().isLog_exceptions());
+      loggingInterceptor.setLogExceptions(applicationProperties.getLogger().isLogExceptions());
       this.registerInterceptor(loggingInterceptor);
     }
 
-    String serverAddress = applicationProperties.getServer_address();
+    String serverAddress = applicationProperties.getServer().getAddress();
     if (!Strings.isNullOrEmpty(serverAddress)) {
       setServerAddressStrategy(new HardcodedServerAddressStrategy(serverAddress));
     } else {
@@ -103,7 +103,7 @@ public class SimpleRestfulServer extends RestfulServer {
      * This server tries to dynamically generate narratives
      */
     INarrativeGenerator theNarrativeGenerator =
-        applicationProperties.isNarrative_enabled()
+        applicationProperties.isNarrativeEnabled()
             ? new DefaultThymeleafNarrativeGenerator()
             : new NullNarrativeGenerator();
     fhirContext.setNarrativeGenerator(theNarrativeGenerator);

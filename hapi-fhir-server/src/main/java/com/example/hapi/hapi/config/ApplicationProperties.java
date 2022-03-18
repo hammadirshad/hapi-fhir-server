@@ -13,18 +13,24 @@ import java.util.Map;
 @Data
 public class ApplicationProperties {
 
-  private boolean response_highlighter_enabled = true;
-  private boolean open_api_enabled = false;
-  private boolean authorization_interceptor_enabled = false;
-  private boolean etag_support_enabled = true;
-  private EncodingEnum default_encoding = EncodingEnum.JSON;
-  private boolean default_pretty_print = true;
-  private boolean fhir_path_interceptor_enabled = false;
-  private String server_address = null;
-  private boolean narrative_enabled = true;
+  private boolean etagSupportEnabled = true;
+  private EncodingEnum defaultEncoding = EncodingEnum.JSON;
+  private boolean defaultPrettyPrint = true;
+  private boolean narrativeEnabled = true;
+
+  private Interceptor interceptor = new Interceptor();
+  private Server server = new Server();
   private Validation validation = new Validation();
   private Logger logger = new Logger();
   private Map<String, ProfileImplementations> profiles = new HashMap<>();
+
+  @Data
+  public static class Interceptor {
+    private boolean responseHighlighterEnabled = true;
+    private boolean openApiEnabled = false;
+    private boolean authorizationEnabled = false;
+    private boolean fhirPathFilterEnabled = false;
+  }
 
   @Data
   public static class ProfileImplementations {
@@ -38,18 +44,25 @@ public class ApplicationProperties {
   @Data
   public static class Validation {
 
-    private boolean requests_enabled = true;
-    private boolean responses_enabled = true;
+    private boolean requestsEnabled = true;
+    private boolean responsesEnabled = true;
   }
 
   @Data
   public static class Logger {
 
-    private boolean logging_enabled = false;
+    private boolean loggingEnabled = false;
     private String name = "fhirtest.access";
     private String error_format = "ERROR - ${requestVerb} ${requestUrl}";
     private String format =
         "Path[${servletPath}] Source[${requestHeader.x-forwarded-for}] Operation[${operationType} ${operationName} ${idOrResourceName}] UA[${requestHeader.user-agent}] Params[${requestParameters}] ResponseEncoding[${responseEncodingNoDefault}] Operation[${operationType} ${operationName} ${idOrResourceName}] UA[${requestHeader.user-agent}] Params[${requestParameters}] ResponseEncoding[${responseEncodingNoDefault}]";
-    private boolean log_exceptions = true;
+    private boolean logExceptions = true;
+  }
+
+  @Data
+  public static class Server {
+
+    private String path = "/hapi";
+    private String address = null;
   }
 }
