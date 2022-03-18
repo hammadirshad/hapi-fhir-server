@@ -1,12 +1,11 @@
 package com.example.hapi.hapi.config;
 
 import ca.uhn.fhir.rest.api.EncodingEnum;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @ConfigurationProperties(prefix = "hapi.fhir")
 @EnableConfigurationProperties
@@ -17,6 +16,7 @@ public class ApplicationProperties {
   private EncodingEnum defaultEncoding = EncodingEnum.JSON;
   private boolean defaultPrettyPrint = true;
   private boolean narrativeEnabled = true;
+  private boolean packageInitializatorEnabled = false;
 
   private Interceptor interceptor = new Interceptor();
   private Server server = new Server();
@@ -26,8 +26,10 @@ public class ApplicationProperties {
 
   @Data
   public static class Interceptor {
+
     private boolean responseHighlighterEnabled = true;
     private boolean openApiEnabled = false;
+    private boolean openApiAuthEnabled = false;
     private boolean authorizationEnabled = false;
     private boolean fhirPathFilterEnabled = false;
   }

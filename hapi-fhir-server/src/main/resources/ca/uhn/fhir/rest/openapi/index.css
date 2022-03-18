@@ -23,13 +23,22 @@ body {
     display: block
 }
 
+.container {
+    display: flex;
+}
+
 .banner {
-    padding-top: 20px;
+    padding-top: 30px;
     padding-left: 25px;
+    padding-right: 25px;
     display: flex;
     flex-direction: row;
     background-color: #AAA;
     border-bottom: 2px solid #888;
+}
+
+.banner img {
+    max-height: 100px;
 }
 
 .banner H1 {

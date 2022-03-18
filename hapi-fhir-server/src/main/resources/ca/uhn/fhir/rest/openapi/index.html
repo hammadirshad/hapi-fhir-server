@@ -10,26 +10,27 @@
 
 <body>
 <div class="container">
-</div>
-<!--<div class="banner">
-  <img th:src="${BANNER_IMAGE_URL}" style="height: 100px;"/>
-</div>-->
-<div class="banner2">
-    <div>
-        <div class="banner2_key">FHIR Server Base URL</div>
-        <div class="banner2_value"><a th:href="${BASE_URL}" th:text="${BASE_URL}"></a></div>
+
+    <div class="banner">
+        <img th:src="${BANNER_IMAGE_URL}"/>
     </div>
-    <div>
-        <div class="banner2_key">OpenAPI Docs</div>
-        <div class="banner2_value"><a th:href="${OPENAPI_DOCS}" th:text="${OPENAPI_DOCS}"></a></div>
-    </div>
-    <div>
-        <div class="banner2_key">FHIR Version</div>
-        <div class="banner2_value">[[${FHIR_VERSION}]] ([[${FHIR_VERSION_CODENAME}]])</div>
-    </div>
-    <div>
-        <div class="banner2_key">[[${SERVER_NAME}]]</div>
-        <div class="banner2_value">[[${SERVER_VERSION}]]</div>
+    <div class="banner2">
+        <div>
+            <div class="banner2_key">FHIR Server Base URL</div>
+            <div class="banner2_value"><a th:href="${BASE_URL}" th:text="${BASE_URL}"></a></div>
+        </div>
+        <div>
+            <div class="banner2_key">OpenAPI Docs</div>
+            <div class="banner2_value"><a th:href="${OPENAPI_DOCS}" th:text="${OPENAPI_DOCS}"></a></div>
+        </div>
+        <div>
+            <div class="banner2_key">FHIR Version</div>
+            <div class="banner2_value">[[${FHIR_VERSION}]] ([[${FHIR_VERSION_CODENAME}]])</div>
+        </div>
+        <div>
+            <div class="banner2_key">[[${SERVER_NAME}]]</div>
+            <div class="banner2_value">[[${SERVER_VERSION}]]</div>
+        </div>
     </div>
 </div>
 <div class="bannerCopyright" th:if="${COPYRIGHT_HTML} != null" th:utext="${COPYRIGHT_HTML}">
@@ -54,18 +55,18 @@
     window.onload = function () {
         // Begin Swagger UI call region
         const ui = SwaggerUIBundle({
-                                       url: "[[${OPENAPI_DOCS} + '?page=' + ${PAGE}]]",
-                                       dom_id: '#swagger-ui',
-                                       deepLinking: true,
-                                       presets: [
-                                           SwaggerUIBundle.presets.apis,
-                                           SwaggerUIStandalonePreset
-                                       ],
-                                       plugins: [
-                                           // SwaggerUIBundle.plugins.DownloadUrl
-                                       ],
-                                       // layout: "StandaloneLayout"
-                                   });
+            url: "[[${OPENAPI_DOCS} + '?page=' + ${PAGE}]]",
+            dom_id: '#swagger-ui',
+            deepLinking: true,
+            presets: [
+                SwaggerUIBundle.presets.apis,
+                SwaggerUIStandalonePreset
+            ],
+            plugins: [
+                // SwaggerUIBundle.plugins.DownloadUrl
+            ],
+            // layout: "StandaloneLayout"
+        });
         // End Swagger UI call region
 
         window.ui = ui;

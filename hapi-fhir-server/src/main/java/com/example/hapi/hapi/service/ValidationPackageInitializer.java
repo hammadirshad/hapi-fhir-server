@@ -30,11 +30,13 @@ public class ValidationPackageInitializer {
 
   @EventListener(ApplicationReadyEvent.class)
   public void run() {
-    try {
-      getAllExamples().forEach(example -> fhirValidationService.validateResource(example, true));
-    } catch (Exception e) {
-      log.error(e.getMessage(), e);
-    }
+   if (applicationProperties.isPackageInitializatorEnabled()){
+     try {
+       getAllExamples().forEach(example -> fhirValidationService.validateResource(example, true));
+     } catch (Exception e) {
+       log.error(e.getMessage(), e);
+     }
+   }
   }
 
   private List<String> getAllExamples() throws IOException {

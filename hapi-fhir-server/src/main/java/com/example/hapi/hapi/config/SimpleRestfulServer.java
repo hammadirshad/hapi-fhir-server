@@ -4,13 +4,23 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.narrative.INarrativeGenerator;
 import ca.uhn.fhir.narrative2.NullNarrativeGenerator;
-import ca.uhn.fhir.rest.server.*;
-import ca.uhn.fhir.rest.server.interceptor.*;
+import ca.uhn.fhir.rest.openapi.OpenApiInterceptor;
+import ca.uhn.fhir.rest.server.ETagSupportEnum;
+import ca.uhn.fhir.rest.server.FifoMemoryPagingProvider;
+import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
+import ca.uhn.fhir.rest.server.IncomingRequestAddressStrategy;
+import ca.uhn.fhir.rest.server.RestfulServer;
+import ca.uhn.fhir.rest.server.interceptor.FhirPathFilterInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.LoggingInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.RequestValidatingInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.ResponseValidatingInterceptor;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
+import com.example.hapi.hapi.config.interceptor.BearerAuthOpenApiInterceptor;
 import com.example.hapi.hapi.config.interceptor.CapabilityStatementInterceptor;
 import com.example.hapi.hapi.config.interceptor.SimpleAuthorizationInterceptor;
-import com.example.hapi.hapi.config.interceptor.SimpleOpenApiInterceptor;
 import com.example.hapi.hapi.resource.BundleResourceProvider;
+import com.example.hapi.hapi.resource.PatientResourceProvider;
 import com.google.common.base.Strings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +35,7 @@ public class SimpleRestfulServer extends RestfulServer {
   private final FhirContext fhirContext;
   private final ApplicationProperties applicationProperties;
   private final BundleResourceProvider bundleResourceProvider;
+  private final PatientResourceProvider patientResourceProvider;
   private final FhirInstanceValidator fhirInstanceValidator;
   private final SimpleAuthorizationInterceptor simpleAuthorizationInterceptor;
 
@@ -32,6 +43,7 @@ public class SimpleRestfulServer extends RestfulServer {
   protected void initialize() {
     setFhirContext(fhirContext);
     registerProvider(bundleResourceProvider);
+    registerProvider(patientResourceProvider);
 
     /* ResponseHighlighter */
     if (applicationProperties.getInterceptor().isResponseHighlighterEnabled()) {
@@ -39,7 +51,11 @@ public class SimpleRestfulServer extends RestfulServer {
     }
     /* Open_api */
     if (applicationProperties.getInterceptor().isOpenApiEnabled()) {
-      registerInterceptor(new SimpleOpenApiInterceptor());
+      if (applicationProperties.getInterceptor().isOpenApiAuthEnabled()) {
+        registerInterceptor(new BearerAuthOpenApiInterceptor());
+      } else {
+        registerInterceptor(new OpenApiInterceptor());
+      }
     }
 
     /* Authorization */

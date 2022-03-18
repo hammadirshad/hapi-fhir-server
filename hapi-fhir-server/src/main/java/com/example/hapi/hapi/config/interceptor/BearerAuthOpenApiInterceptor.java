@@ -10,15 +10,14 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.security.SecurityScheme.In;
 import io.swagger.v3.oas.models.security.SecurityScheme.Type;
-import lombok.extern.slf4j.Slf4j;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class SimpleOpenApiInterceptor extends OpenApiInterceptor {
+public class BearerAuthOpenApiInterceptor extends OpenApiInterceptor {
 
   @Hook(Pointcut.SERVER_INCOMING_REQUEST_PRE_HANDLER_SELECTED)
   @Override
@@ -43,7 +42,7 @@ public class SimpleOpenApiInterceptor extends OpenApiInterceptor {
             .getPaths()
             .forEach(
                 (key, pathValue) -> {
-                  if (key.startsWith("/Bundle")) {
+                  if (key.startsWith("/Bundle") || key.startsWith("/Patient")) {
                     if (pathValue.getGet() != null) {
                       pathValue
                           .getGet()
