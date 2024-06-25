@@ -6,12 +6,12 @@
   <groupId>com.example.hapi</groupId>
   <artifactId>hapi-fhir-server-parent</artifactId>
   <packaging>pom</packaging>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.6.4</version>
+    <version>3.3.1</version>
   </parent>
 
   <modules>
@@ -20,9 +20,12 @@
 
   <properties>
     <java.version>17</java.version>
-    <hapi.version>5.7.0</hapi.version>
-    <hapi-r4.version>5.6.35</hapi-r4.version>
-    <spring-boot.version>2.6.3</spring-boot.version>
+    <hapi.version>7.2.1</hapi.version>
+    <hapi-hl7.version>6.1.2.2</hapi-hl7.version>
+    <Saxon-HE.version>12.4</Saxon-HE.version>
+    <spring-boot.version>3.3.1</spring-boot.version>
+    <spring-xml.version>4.0.11</spring-xml.version>
+    <gson.version>2.11.0</gson.version>
   </properties>
 
   <dependencyManagement>
@@ -30,19 +33,58 @@
       <dependency>
         <groupId>org.springframework.ws</groupId>
         <artifactId>spring-xml</artifactId>
-        <version>3.1.1</version>
+        <version>${spring-xml}</version>
       </dependency>
 
 
       <dependency>
         <groupId>com.google.code.gson</groupId>
         <artifactId>gson</artifactId>
-        <version>2.8.7</version>
+        <version>${gson.version}</version>
+      </dependency>
+
+      <!--hapi hl7-->
+      <dependency>
+        <groupId>net.sf.saxon</groupId>
+        <artifactId>Saxon-HE</artifactId>
+        <version>${Saxon-HE.version}</version>
       </dependency>
 
       <dependency>
         <groupId>ca.uhn.hapi.fhir</groupId>
+        <artifactId>org.hl7.fhir.r4</artifactId>
+        <version>${hapi-hl7.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>ca.uhn.hapi.fhir</groupId>
+        <artifactId>org.hl7.fhir.utilities</artifactId>
+        <version>${hapi-hl7.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>ca.uhn.hapi.fhir</groupId>
+        <artifactId>org.hl7.fhir.validation</artifactId>
+        <version>${hapi-hl7.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>ca.uhn.hapi.fhir</groupId>
+        <artifactId>org.hl7.fhir.convertors</artifactId>
+        <version>${hapi-hl7.version}</version>
+      </dependency>
+
+      <!--hapi-->
+
+      <dependency>
+        <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir-base</artifactId>
+        <version>${hapi.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>ca.uhn.hapi.fhir</groupId>
+        <artifactId>hapi-fhir-caching-caffeine</artifactId>
         <version>${hapi.version}</version>
       </dependency>
 
@@ -54,32 +96,8 @@
 
       <dependency>
         <groupId>ca.uhn.hapi.fhir</groupId>
-        <artifactId>org.hl7.fhir.r4</artifactId>
-        <version>${hapi-r4.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir-validation-resources-r4</artifactId>
         <version>${hapi.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>ca.uhn.hapi.fhir</groupId>
-        <artifactId>org.hl7.fhir.utilities</artifactId>
-        <version>${hapi-r4.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>net.sf.saxon</groupId>
-        <artifactId>Saxon-HE</artifactId>
-        <version>10.5</version>
-      </dependency>
-
-      <dependency>
-        <groupId>ca.uhn.hapi.fhir</groupId>
-        <artifactId>org.hl7.fhir.validation</artifactId>
-        <version>${hapi-r4.version}</version>
       </dependency>
 
       <dependency>

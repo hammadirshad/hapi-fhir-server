@@ -41,7 +41,7 @@ server:
              "request-method":"%m", "status": "%s", "body_bytes_sent": "%B", "request_time": "%T",
              "http_referrer": "%{Referer}i","http_user_agent": "%{User-Agent}i", "request": "%r"},'
       prefix: access_log_
-  max-http-header-size: 100KB
+  max-http-request-header-size: 100KB
 management:
   info:
     env:
@@ -51,12 +51,6 @@ management:
   endpoint:
     health:
       show-details: always
-    heapdump:
-      enabled: false
-    mappings:
-      enabled: false
-    configprops:
-      keys-to-sanitize: [ ".*password$", ".*secret$", ".*key$", ".*token$", ".*credentials.*" ]
   endpoints:
     enabled-by-default: true
     web:

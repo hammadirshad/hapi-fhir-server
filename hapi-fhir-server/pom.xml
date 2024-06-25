@@ -9,7 +9,7 @@
   <parent>
     <groupId>com.example.hapi</groupId>
     <artifactId>hapi-fhir-server-parent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
 
   <dependencies>
@@ -24,20 +24,15 @@
       <groupId>org.springframework.boot</groupId>
     </dependency>
 
+
     <dependency>
       <groupId>ca.uhn.hapi.fhir</groupId>
       <artifactId>hapi-fhir-base</artifactId>
-      <version>${hapi.version}</version>
     </dependency>
 
     <dependency>
       <groupId>ca.uhn.hapi.fhir</groupId>
-      <artifactId>hapi-fhir-validation</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>net.sf.saxon</groupId>
-      <artifactId>Saxon-HE</artifactId>
+      <artifactId>hapi-fhir-structures-r4</artifactId>
     </dependency>
 
     <dependency>
@@ -47,9 +42,13 @@
 
     <dependency>
       <groupId>ca.uhn.hapi.fhir</groupId>
-      <artifactId>org.hl7.fhir.utilities</artifactId>
+      <artifactId>hapi-fhir-caching-caffeine</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>ca.uhn.hapi.fhir</groupId>
+      <artifactId>hapi-fhir-validation</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>ca.uhn.hapi.fhir</groupId>

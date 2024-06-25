@@ -1,15 +1,17 @@
-FROM openjdk:11-jre-slim as builder
+FROM eclipse-temurin:21-jre as builder
 
-WORKDIR application
+WORKDIR app
 ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} application.jar
-RUN java -Djarmode=layertools -jar application.jar extract
+COPY ${JAR_FILE} layered-app.jar
+RUN java -Djarmode=layertools -jar layered-app.jar extract
 
-FROM openjdk:11-jre-slim
+FROM eclipse-temurin:21-jre
 
-COPY --from=builder application/dependencies/ ./
-COPY --from=builder application/snapshot-dependencies/ ./
-COPY --from=builder application/spring-boot-loader/ ./
-COPY --from=builder application/application/ ./
+ENV JAVA_OPTS=""
 
-CMD ["java", "org.springframework.boot.loader.JarLauncher"]
+COPY --from=builder app/dependencies/ ./
+COPY --from=builder app/snapshot-dependencies/ ./
+COPY --from=builder app/spring-boot-loader/ ./
+COPY --from=builder app/application/ ./
+
+CMD ["java", "org.springframework.boot.loader.launch.JarLauncher"]

@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseConformance;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Slf4j
 @Deprecated

@@ -23,48 +23,75 @@ body {
     display: block
 }
 
-.container {
+html body .container {
     display: flex;
 }
 
-.banner {
+html body .topbar {
     padding-top: 30px;
-    padding-left: 25px;
-    padding-right: 25px;
+    padding-left: 20px;
     display: flex;
     flex-direction: row;
-    background-color: #AAA;
-    border-bottom: 2px solid #888;
 }
 
-.banner img {
-    max-height: 100px;
+html body .topbar img {
+    max-height: 70px;
 }
 
-.banner H1 {
+html body .topbar H1 {
     font-family: sans-serif;
-    height: 150%;
     position: relative;
-    line-height: 120%;
-    top: 6px;
     left: 18px;
 }
 
-.banner .version {
+html body .topbar .version {
     font-size: 30%;
     position: relative;
-    top: -11px;
+    top: -9px;
     background-color: #888;
     color: #FFF;
     padding: 5px;
+    margin: 10px;
     border-radius: 15px;
 }
 
-.bannerCopyright {
+html body .topbar-info {
+    font-family: Arial, sans-serif;
+    color: rgb(0, 41, 32);
+    line-height: 1.4em;
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    display: table;
+    flex-direction: row;
+    width: 100%;
+}
+
+html body .topbar-info > DIV {
+    display: table-row;
+}
+
+html body .topbar-info > DIV > DIV {
+    display: table-cell;
+    padding-bottom: 10px;
+}
+
+html body .topbar-info-key {
+    min-width: 100px;
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+html body .topbar-info-value {
+    padding-left: 20px;
+    width: 100%;
+}
+
+html body .topbar-info-copyright {
     font-family: sans-serif;
     padding-top: 20px;
-    padding-left: 30px;
-    padding-right: 30px;
+    padding-left: 20px;
     padding-bottom: 20px;
     background-color: #CCC;
     border-bottom: 2px solid #888;
@@ -72,47 +99,11 @@ body {
     font-size: 0.9em;
 }
 
-.banner2 {
-    font-family: sans-serif;
-    padding-top: 30px;
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-bottom: 20px;
-    display: table;
-    flex-direction: row;
-    background-color: #CCC;
-    border-bottom: 2px solid #888;
-    width: 100%;
-}
-
-.banner2 > DIV {
-    display: table-row;
-}
-
-.banner2 > DIV > DIV {
-    display: table-cell;
-    padding-bottom: 10px;
-}
-
-.banner2_key {
-    min-width: 100px;
-    white-space: nowrap;
-    font-weight: bold;
-}
-
-.banner2_value {
-    padding-left: 20px;
-    width: 100%;
-}
-
-.banner3 {
+html body .topbar-buttons {
     font-family: sans-serif;
     padding-top: 20px;
-    padding-left: 30px;
-    padding-right: 30px;
+    padding-left: 20px;
     padding-bottom: 20px;
-    background-color: #EEE;
-    border-bottom: 2px solid #888;
     width: 100%;
 }
 
@@ -129,7 +120,7 @@ body {
     border-radius: 8px;
     text-decoration: none;
     line-height: 0.5em;
-    border: 1px solid #FFF;
+    border: 1px solid #888;
 }
 
 .pageButton:HOVER {
@@ -147,4 +138,245 @@ body {
     padding: 4px;
     border-radius: 6px;
     color: #000;
+}
+
+/* dropdowns */
+html body .swagger-ui select, html body .swagger-ui select[multiple] {
+    line-height: 1em;
+    color: rgb(0, 62, 105);
+    border-radius: 3px;
+    /* ReSharper disable once InvalidValue */
+    box-shadow: inset 0 1px 2px hsl(240deg 7% 81% / 40%);
+    border: 1px solid #dcddde;
+    background-color: #fff;
+    transition: border-color .1s ease-in-out, box-shadow .1s ease-in-out;
+}
+
+/* common elements inside rendered text */
+html body .swagger-ui .info {
+    margin: 20px 0;
+}
+
+html body .swagger-ui .info pre, html body .swagger-ui .info b, html body .swagger-ui .info a, html body .swagger-ui .info p, html body .swagger-ui .info table, html body .swagger-ui .info .url, html body .swagger-ui .info li {
+    font-size: 16px;
+}
+
+html body .swagger-ui .info h1, html body .swagger-ui .info h2, html body .swagger-ui .info h3, html body .swagger-ui .info h4, html body .swagger-ui .info h5, html body .swagger-ui .info p, html body .swagger-ui .info table, html body .swagger-ui .info li {
+    font-family: Arial, sans-serif;
+    color: rgb(0, 41, 32);
+    line-height: 1.4em;
+}
+
+html body .swagger-ui .info .version {
+    line-height: 1.2em;
+}
+
+html body .swagger-ui .markdown code, html body .swagger-ui .renderedMarkdown code {
+    color: rgb(0, 41, 32);
+}
+
+/* input */
+html body .swagger-ui .operation-filter-input {
+    border: 2px solid rgb(0, 62, 105) !important;
+}
+
+/* buttons */
+html body .swagger-ui .auth-wrapper .btn {
+    border-color: #49cc90;
+    border-width: 2px;
+    text-decoration: none;
+    margin-bottom: 0.8em !important;
+    margin-right: 0.8em !important;
+    font-weight: 400;
+    font-size: 18px;
+}
+
+html body .swagger-ui .auth-wrapper .btn:hover {
+    background-color: rgb(0, 62, 105);
+    color: white;
+}
+
+/* Hide server list */
+html body .swagger-ui .scheme-container .servers-title {
+    display: none;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+html body .swagger-ui .scheme-container .servers select {
+    border: 2px solid rgb(0, 62, 105) !important;
+    margin-bottom: 0.8em !important;
+    margin-right: 0.8em !important;
+    border-radius: 4px;
+    padding: 10px 30px 10px 10px;
+}
+
+html body .swagger-ui .scheme-container {
+    box-shadow: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+/* Colors of API endpoints */
+html body .swagger-ui .opblock-summary-get {
+    border-color: #00467A;
+    background: #90DDFA;
+}
+
+html body .swagger-ui .opblock-summary-get a, html body .swagger-ui .opblock-summary-get .opblock-summary-description {
+    color: #002920;
+}
+
+html body .swagger-ui .opblock-summary-post {
+    border-color: #002920;
+    background: #C4F2DA;
+}
+
+html body .swagger-ui .opblock-summary-post a, html body .swagger-ui .opblock-summary-post .opblock-summary-description {
+    color: #002920;
+}
+
+html body .swagger-ui .opblock-summary-delete {
+    border-color: #6B1E27;
+    background: #D48282;
+}
+
+html body .swagger-ui .opblock-summary-delete a, html body .swagger-ui .opblock-summary-delete .opblock-summary-description {
+    color: #000000;
+}
+
+html body .swagger-ui .opblock-summary-head {
+    border-color: #372770;
+    background: #C0A9FF;
+}
+
+html body .swagger-ui .opblock-summary-head a, html body .swagger-ui .opblock-summary-head .opblock-summary-description {
+    color: #000000;
+}
+
+html body .swagger-ui .opblock-body pre.microlight {
+    font-size: 14px;
+}
+
+html body .swagger-ui .opblock-tag-section {
+    border: 1px solid rgba(59, 65, 81, .3);
+    border-radius: 4px;
+    padding: 0 1em;
+    margin-bottom: 1em;
+}
+
+html body .swagger-ui section.models.is-open {
+    padding: 0 1em;
+}
+
+/* schemas */
+html body .swagger-ui .model {
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+}
+
+html body .swagger-ui section.models .model-container {
+    background-color: white;
+    border: 2px solid rgb(0, 62, 105)
+}
+html body .swagger-ui section.models .model-container:last-of-type{
+    margin: 20px 20px;
+}
+
+html body .swagger-ui section.models .model-container:hover {
+    background-color: rgb(128, 159, 180);
+}
+
+html body .swagger-ui section.models .model-container .model-box, html body .swagger-ui section.models .model-container .model-box .model-box-control {
+    width: 100%;
+}
+
+html body .swagger-ui section.models .model-container .pointer {
+    display: inline-block;
+}
+
+html body .swagger-ui table.model tr.description {
+    color: #000000;
+}
+
+html body .swagger-ui .model .property-row td, html body .swagger-ui .model .property-row td:first-of-type {
+    padding: 0.4em 0.4em 0.4em 2em;
+}
+
+html body .swagger-ui .model .property-row td:first-child {
+    padding-right: 0.2em;
+}
+
+html body .swagger-ui .model .model-box-control {
+    margin-bottom: 1em;
+}
+
+html body .swagger-ui .model .brace-open, html body .swagger-ui .model .brace-close, html body .swagger-ui .model .inner-object {
+    display: block;
+    background-color: white;
+    padding: 1em;
+}
+
+html body .swagger-ui .model .brace-open {
+    border-radius: 0.5em 0.5em 0 0;
+}
+
+html body .swagger-ui .model .brace-close {
+    border-radius: 0 0 0.5em 0.5em;
+}
+
+html body .swagger-ui .model tr:nth-child(even) {
+    background-color: #F1F2F2;
+}
+
+/* Common elements */
+html body {
+    background-color: white !important;
+    font-family: Arial, sans-serif !important;
+}
+
+html body .swagger-ui .info .title, html body .swagger-ui h1 {
+    font-family: Arial, sans-serif;
+    font-size: 53px;
+    font-weight: 400;
+    color: rgb(0, 41, 32);
+}
+
+html body .swagger-ui h2 {
+    font-family: Arial, sans-serif;
+    font-size: 27px;
+    font-weight: 400;
+    color: rgb(0, 41, 32);
+}
+
+html body .swagger-ui section.models.is-open h4 span {
+    margin-top: 0.5em;
+}
+
+html body .swagger-ui section.models.is-open h4 span, html body .swagger-ui h3 {
+    font-family: Arial, sans-serif;
+    font-size: 21px;
+    font-weight: 700;
+    color: rgb(0, 41, 32);
+}
+
+html body .swagger-ui h4, html body .swagger-ui h5 {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: rgb(0, 41, 32);
+}
+
+html body .swagger-ui {
+    font-family: Arial, sans-serif;
+}
+
+html body .swagger-ui .model-title {
+    font-family: Arial, sans-serif;
+    color: rgb(0, 41, 32);
+    font-size: 18px;
+}
+
+*, :after, :before {
+    box-sizing: border-box !important;
 }
