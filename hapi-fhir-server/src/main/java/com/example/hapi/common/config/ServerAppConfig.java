@@ -15,6 +15,11 @@ import org.springframework.web.client.RestTemplate;
 public class ServerAppConfig {
 
   @Bean
+  public FHIRServerRequestObservationConvention extendedServerRequestObservationConvention() {
+    return new FHIRServerRequestObservationConvention();
+  }
+
+  @Bean
   @ConditionalOnMissingBean(RestTemplateBuilder.class)
   public RestTemplateBuilder restTemplateBuilder() {
     return new RestTemplateBuilder();
