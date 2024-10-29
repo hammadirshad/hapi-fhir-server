@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hl7.fhir.common.hapi.validation.support.*;
 import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r5.utils.validation.constants.BestPracticeWarningLevel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -49,6 +50,9 @@ public class FhirValidationConfig {
     fhirInstanceValidator.setErrorForUnknownProfiles(false);
     fhirInstanceValidator.setNoTerminologyChecks(false);
     fhirInstanceValidator.setAssumeValidRestReferences(true);
+
+    BestPracticeWarningLevel level = BestPracticeWarningLevel.Ignore;
+    fhirInstanceValidator.setBestPracticeWarningLevel(level);
     return fhirInstanceValidator;
   }
 
