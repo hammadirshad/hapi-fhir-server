@@ -1,11 +1,11 @@
-FROM eclipse-temurin:21-jre as builder
+FROM eclipse-temurin:21.0.5_11-jre as builder
 
 WORKDIR app
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} layered-app.jar
 RUN java -Djarmode=layertools -jar layered-app.jar extract
 
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:21.0.5_11-jre
 
 ENV JAVA_OPTS=""
 
