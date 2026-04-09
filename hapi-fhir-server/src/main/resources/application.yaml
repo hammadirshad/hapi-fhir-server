@@ -15,7 +15,6 @@ hapi:
       responses-enabled: false
     server:
       path: /hapi
-      address: http://localhost:${server.port}${hapi.fhir.server.path}
     profiles:
       no-basis:
         name: hl7.fhir.no.basis
@@ -24,14 +23,14 @@ hapi:
         #path: classpath:packages/${hapi.fhir.profiles.no-basis.name}-${hapi.fhir.profiles.no-basis.version}.tgz
 logging:
   file:
-    name: /log/fhir.log
+    path: /var/log/app-logs
 server:
   port: 8080
   http2:
     enabled: true
   tomcat:
     accesslog:
-      directory: /log/access-logs
+      directory: /var/log/access-logs
       enabled: false
       file-date-format: yyyy-MM-dd
       suffix: .log.json
@@ -50,10 +49,11 @@ management:
     health:
       show-details: always
   endpoints:
-    enabled-by-default: true
     web:
       exposure:
         include: '*'
+    access:
+      default: read_only
 info:
   profiles:
     no-basis-version: ${hapi.fhir.profiles.no-basis.version}

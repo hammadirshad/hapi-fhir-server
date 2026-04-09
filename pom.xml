@@ -26,6 +26,7 @@
     <spring-boot.version>4.0.5</spring-boot.version>
     <spring-xml.version>5.0.1</spring-xml.version>
     <gson.version>2.13.2</gson.version>
+    <logstash-logback.version>9.0</logstash-logback.version>
   </properties>
 
   <dependencyManagement>
@@ -116,6 +117,12 @@
             <artifactId>hapi-fhir-test-utilities</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>net.logstash.logback</groupId>
+        <artifactId>logstash-logback-encoder</artifactId>
+        <version>${logstash-logback.version}</version>
       </dependency>
 
     </dependencies>

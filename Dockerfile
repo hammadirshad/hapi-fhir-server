@@ -10,6 +10,8 @@ RUN java -Djarmode=tools -jar layered-app.jar extract --launcher --destination .
 
 FROM eclipse-temurin:25-jre
 
+RUN mkdir -p /application /var/log/app-logs /var/log/access-logs
+
 ENV JAVA_OPTS=""
 WORKDIR application
 
