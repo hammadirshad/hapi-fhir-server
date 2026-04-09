@@ -44,6 +44,8 @@ service:
 configmap:
   server:
     enabled: true
+  https:
+    enabled: false
   accesslog:
     enabled: false
 

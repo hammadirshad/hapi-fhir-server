@@ -15,6 +15,7 @@ hapi:
       responses-enabled: false
     server:
       path: /hapi
+      address: http://localhost:${server.port}${hapi.fhir.server.path}
     profiles:
       no-basis:
         name: hl7.fhir.no.basis
