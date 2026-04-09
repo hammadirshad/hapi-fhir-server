@@ -2,5 +2,64 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": [
+        "maven"
+      ],
+      "labels": [
+        "renovate",
+        "maven"
+      ],
+      "enabled": true
+    },
+    {
+      "matchDatasources": [
+        "maven"
+      ],
+      "groupName": "HAPI FHIR Dependencies",
+      "groupSlug": "hapi-fhir-dependencies",
+      "labels": [
+        "renovate",
+        "maven",
+        "hapi-fhir"
+      ],
+      "enabled": true,
+      "matchPackageNames": [
+        "/^ca\\.uhn\\.hapi\\.fhir.*/"
+      ]
+    },
+    {
+      "matchDatasources": [
+        "maven"
+      ],
+      "groupName": "spring-boot dependencies",
+      "groupSlug": "spring-springframework-boot",
+      "labels": [
+        "renovate",
+        "maven",
+        "spring-boot"
+      ],
+      "enabled": true,
+      "matchPackageNames": [
+        "/^org\\.springframework\\.boot:/"
+      ]
+    },
+    {
+      "matchDatasources": [
+        "maven"
+      ],
+      "matchPackageNames": [
+        "com.example.hapi:hapi-fhir-server-parent"
+      ],
+      "enabled": false
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "enabled": false
+    }
   ]
 }
