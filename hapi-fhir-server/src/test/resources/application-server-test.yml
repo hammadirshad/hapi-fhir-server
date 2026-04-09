@@ -12,3 +12,11 @@ server:
   tomcat:
     accesslog:
       directory: access-logs
+hapi:
+  fhir:
+    profiles:
+      no-basis:
+        name: hl7.fhir.no.basis
+        version: 2.1.1
+        url: https://packages.simplifier.net/${hapi.fhir.profiles.no-basis.name}/${hapi.fhir.profiles.no-basis.version}
+        path: classpath:packages/${hapi.fhir.profiles.no-basis.name}-${hapi.fhir.profiles.no-basis.version}.tgz
