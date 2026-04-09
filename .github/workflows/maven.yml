@@ -9,18 +9,27 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java: [ 25 ]
+
+    env:
+      MAVEN_OPTS: -Dmaven.repo.local=.m2/repository
+
     steps:
       - uses: actions/checkout@v6
+
       - name: Setup java
         uses: actions/setup-java@v5
         with:
-          distribution: 'adopt'
-          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+          java-version: 25
+          cache: maven
+
       - name: Build with Maven
-        run: mvn -B clean package
+        run: mvn -B clean package --no-transfer-progress
 
       - name: Build Docker image
-        run: docker build --build-arg JAR_FILE=./target/hapi-fhir-server.jar -f ./Dockerfile -t hapi-fhir-server:latest  ./hapi-fhir-server
+        if: github.event_name == 'push'
+        run: |
+          docker build \
+          --build-arg JAR_FILE=./target/hapi-fhir-server.jar \
+          -f ./Dockerfile -t hapi-fhir-server:latest \
+          ./hapi-fhir-server

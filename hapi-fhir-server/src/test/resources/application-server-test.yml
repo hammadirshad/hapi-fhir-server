@@ -1,8 +1,14 @@
 spring:
   datasource:
     driverClassName: org.h2.Driver
-  liquibase:
-    enabled: false
   jpa:
     hibernate:
       ddl-auto: create-drop
+
+logging:
+  file:
+    name: fhir-hapi-server.log
+server:
+  tomcat:
+    accesslog:
+      directory: access-logs

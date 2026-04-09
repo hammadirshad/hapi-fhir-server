@@ -29,8 +29,6 @@ server:
   port: 8080
   http2:
     enabled: true
-  error:
-    include-message: always
   tomcat:
     accesslog:
       directory: /log/access-logs
@@ -59,3 +57,7 @@ management:
 info:
   profiles:
     no-basis-version: ${hapi.fhir.profiles.no-basis.version}
+spring:
+  web:
+    error:
+      include-message: always

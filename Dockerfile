@@ -11,10 +11,11 @@ RUN java -Djarmode=tools -jar layered-app.jar extract --launcher --destination .
 FROM eclipse-temurin:25-jre
 
 ENV JAVA_OPTS=""
+WORKDIR application
 
-COPY --from=builder app/dependencies/ ./
-COPY --from=builder app/snapshot-dependencies/ ./
-COPY --from=builder app/spring-boot-loader/ ./
-COPY --from=builder app/application/ ./
+COPY --from=builder app/layers/dependencies/ ./
+COPY --from=builder app/layers/snapshot-dependencies/ ./
+COPY --from=builder app/layers/spring-boot-loader/ ./
+COPY --from=builder app/layers/application/ ./
 
 CMD ["java", "org.springframework.boot.loader.launch.JarLauncher"]
