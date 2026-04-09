@@ -48,6 +48,15 @@
     },
     {
       "matchDatasources": [
+        "maven"
+      ],
+      "matchPackageNames": [
+        "com.example.hapi:hapi-fhir-server-parent"
+      ],
+      "enabled": false
+    },
+    {
+      "matchDatasources": [
         "docker"
       ],
       "enabled": false
