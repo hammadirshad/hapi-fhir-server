@@ -1,38 +1,43 @@
 package com.example.hapi.hapi.config;
 
+import static org.apache.commons.lang3.StringUtils.defaultString;
+
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.validation.FhirValidator;
 import com.example.hapi.hapi.config.ApplicationProperties.ProfileImplementations;
+import java.io.IOException;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hl7.fhir.common.hapi.validation.support.*;
+import org.hl7.fhir.common.hapi.validation.support.CommonCodeSystemsTerminologyService;
+import org.hl7.fhir.common.hapi.validation.support.InMemoryTerminologyServerValidationSupport;
+import org.hl7.fhir.common.hapi.validation.support.NpmPackageValidationSupport;
+import org.hl7.fhir.common.hapi.validation.support.SnapshotGeneratingValidationSupport;
+import org.hl7.fhir.common.hapi.validation.support.ValidationSupportChain;
 import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r5.utils.validation.constants.BestPracticeWarningLevel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
-import java.util.List;
-
-import static org.apache.commons.lang3.StringUtils.defaultString;
+import org.springframework.web.client.RestClient;
 
 @Configuration
 @Slf4j
+@RequiredArgsConstructor
 public class FhirValidationConfig {
 
+  private final ApplicationProperties applicationProperties;
+  private final RestClient restClient;
+
   @Bean
-  public IValidationSupport validationSupport(
-      ApplicationProperties applicationProperties,
-      RestTemplate restTemplate,
-      FhirContext fhirContext)
+  public IValidationSupport validationSupport(FhirContext fhirContext)
       throws IOException {
     ValidationSupportChain validationSupportChain = new ValidationSupportChain();
     validationSupportChain.addValidationSupport(new DefaultProfileValidationSupport(fhirContext));
-    validationSupportChain.addValidationSupport(
-        getNpmPackageValidationSupport(applicationProperties, restTemplate, fhirContext));
+    validationSupportChain.addValidationSupport(getNpmPackageValidationSupport(
+        fhirContext, applicationProperties));
     validationSupportChain.addValidationSupport(
         new CommonCodeSystemsTerminologyService(fhirContext));
     validationSupportChain.addValidationSupport(
@@ -40,8 +45,9 @@ public class FhirValidationConfig {
     validationSupportChain.addValidationSupport(
         new SnapshotGeneratingValidationSupport(fhirContext));
 
-    return new CachingValidationSupport(validationSupportChain);
+    return validationSupportChain;
   }
+
 
   @Bean
   public FhirInstanceValidator fhirInstanceValidator(IValidationSupport validationSupport) {
@@ -63,14 +69,12 @@ public class FhirValidationConfig {
     return validator;
   }
 
-  private NpmPackageValidationSupport getNpmPackageValidationSupport(
-      ApplicationProperties applicationProperties,
-      RestTemplate restTemplate,
-      FhirContext fhirContext)
-      throws IOException {
+
+  private NpmPackageValidationSupport getNpmPackageValidationSupport(FhirContext fhirContext,
+      ApplicationProperties applicationProperties) throws IOException {
 
     RemoteNpmPackageValidationSupport npmPackageValidationSupport =
-        new RemoteNpmPackageValidationSupport(fhirContext, restTemplate);
+        new RemoteNpmPackageValidationSupport(fhirContext, restClient);
     for (ProfileImplementations profileImplementations :
         applicationProperties.getProfiles().values()) {
       log.info(
@@ -89,9 +93,8 @@ public class FhirValidationConfig {
     if (resourceList != null) {
       for (IBaseResource baseResource : resourceList) {
 
-        String url =
-            defaultString(
-                fhirContext.newTerser().getSinglePrimitiveValueOrNull(baseResource, "url"));
+        String url = defaultString(
+            fhirContext.newTerser().getSinglePrimitiveValueOrNull(baseResource, "url"));
 
         if (!url.contains("http://hl7.org/fhir")) {
           log.info("Npm package resource " + baseResource);
@@ -100,4 +103,5 @@ public class FhirValidationConfig {
     }
     return npmPackageValidationSupport;
   }
+
 }

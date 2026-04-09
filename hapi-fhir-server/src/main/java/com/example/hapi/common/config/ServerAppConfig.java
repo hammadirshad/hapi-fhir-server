@@ -3,11 +3,10 @@ package com.example.hapi.common.config;
 import com.example.hapi.hapi.config.ApplicationProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 @Configuration
 @EnableScheduling
@@ -20,14 +19,8 @@ public class ServerAppConfig {
   }
 
   @Bean
-  @ConditionalOnMissingBean(RestTemplateBuilder.class)
-  public RestTemplateBuilder restTemplateBuilder() {
-    return new RestTemplateBuilder();
-  }
-
-  @Bean
-  @ConditionalOnMissingBean(RestTemplate.class)
-  public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
-    return restTemplateBuilder.build();
+  @ConditionalOnMissingBean(RestClient.class)
+  public RestClient restClient(RestClient.Builder builder) {
+    return builder.build();
   }
 }

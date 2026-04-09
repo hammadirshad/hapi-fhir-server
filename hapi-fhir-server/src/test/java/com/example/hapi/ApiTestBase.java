@@ -1,15 +1,13 @@
 package com.example.hapi;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.data.jpa.test.autoconfigure.AutoConfigureDataJpa;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.boot.jpa.test.autoconfigure.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -28,12 +26,6 @@ import org.springframework.test.web.servlet.MockMvc;
 @ActiveProfiles("server-test")
 public class ApiTestBase {
 
-  @Autowired protected MockMvc mockMvc;
-
-  @Autowired protected ObjectMapper objectMapper;
-
-  @SneakyThrows
-  protected String asJsonString(final Object obj) {
-    return objectMapper.writeValueAsString(obj);
-  }
+  @Autowired
+  protected MockMvc mockMvc;
 }

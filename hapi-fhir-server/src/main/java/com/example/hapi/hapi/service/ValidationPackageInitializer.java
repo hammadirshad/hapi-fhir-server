@@ -3,6 +3,11 @@ package com.example.hapi.hapi.service;
 import ca.uhn.fhir.util.ClasspathUtil;
 import com.example.hapi.hapi.config.ApplicationProperties;
 import com.example.hapi.hapi.config.ApplicationProperties.ProfileImplementations;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hl7.fhir.utilities.npm.NpmPackage;
@@ -11,13 +16,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.web.client.RestClient;
 
 @Slf4j
 @Service
@@ -25,18 +24,18 @@ import java.util.List;
 public class ValidationPackageInitializer {
 
   private final FhirValidationService fhirValidationService;
-  private final RestTemplate restTemplate;
+  private final RestClient restClient;
   private final ApplicationProperties applicationProperties;
 
   @EventListener(ApplicationReadyEvent.class)
   public void run() {
-   if (applicationProperties.isPackageInitializatorEnabled()){
-     try {
-       getAllExamples().forEach(example -> fhirValidationService.validateResource(example, true));
-     } catch (Exception e) {
-       log.error(e.getMessage(), e);
-     }
-   }
+    if (applicationProperties.isPackageInitializatorEnabled()) {
+      try {
+        getAllExamples().forEach(example -> fhirValidationService.validateResource(example, true));
+      } catch (Exception e) {
+        log.error(e.getMessage(), e);
+      }
+    }
   }
 
   private List<String> getAllExamples() throws IOException {
@@ -73,7 +72,8 @@ public class ValidationPackageInitializer {
   }
 
   public NpmPackage downloadSimplifierPackage(String url) throws IOException {
-    ResponseEntity<Resource> responseEntity = restTemplate.getForEntity(url, Resource.class);
+    ResponseEntity<Resource> responseEntity = restClient.get().uri(url).retrieve()
+        .toEntity(Resource.class);
     if (responseEntity.hasBody() && responseEntity.getBody() != null) {
       InputStream inputStream = responseEntity.getBody().getInputStream();
       return NpmPackage.fromPackage(inputStream);

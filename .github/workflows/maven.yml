@@ -1,0 +1,26 @@
+name: build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ 25 ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'adopt'
+          java-version: ${{ matrix.java }}
+      - name: Build with Maven
+        run: mvn -B clean package
+
+      - name: Build Docker image
+        run: docker build --build-arg JAR_FILE=./target/hapi-fhir-server.jar -f ./Dockerfile -t hapi-fhir-server:latest  ./hapi-fhir-server

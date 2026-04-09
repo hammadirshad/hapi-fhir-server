@@ -1,11 +1,14 @@
-FROM eclipse-temurin:21-jre as builder
+FROM eclipse-temurin:25-jre as builder
 
 WORKDIR app
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} layered-app.jar
-RUN java -Djarmode=layertools -jar layered-app.jar extract
 
-FROM eclipse-temurin:21-jre
+RUN java -Djarmode=tools -jar layered-app.jar extract --layers --destination ./layers
+RUN java -Djarmode=tools -jar layered-app.jar extract --launcher --destination ./layers/spring-boot-loader
+
+
+FROM eclipse-temurin:25-jre
 
 ENV JAVA_OPTS=""
 

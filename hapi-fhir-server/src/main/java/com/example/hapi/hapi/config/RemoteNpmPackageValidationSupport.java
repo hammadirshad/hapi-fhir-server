@@ -2,30 +2,29 @@ package com.example.hapi.hapi.config;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
+import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import org.hl7.fhir.common.hapi.validation.support.NpmPackageValidationSupport;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Locale;
+import org.springframework.web.client.RestClient;
 
 @Slf4j
 public class RemoteNpmPackageValidationSupport extends NpmPackageValidationSupport {
 
-  private final RestTemplate restTemplate;
+  private final RestClient restClient;
 
   /** Constructor */
   public RemoteNpmPackageValidationSupport(
-      @Nonnull FhirContext theFhirContext, RestTemplate restTemplate) {
+      @Nonnull FhirContext theFhirContext, RestClient restClient) {
     super(theFhirContext);
-    this.restTemplate = restTemplate;
+    this.restClient = restClient;
   }
 
   /**
@@ -53,10 +52,12 @@ public class RemoteNpmPackageValidationSupport extends NpmPackageValidationSuppo
   }
 
   private NpmPackage downloadSimplifierPackage(String url) throws IOException {
-    ResponseEntity<Resource> responseEntity = restTemplate.getForEntity(url, Resource.class);
+    ResponseEntity<Resource> responseEntity =
+        restClient.get().uri(url).retrieve().toEntity(Resource.class);
     if (responseEntity.hasBody() && responseEntity.getBody() != null) {
-      InputStream inputStream = responseEntity.getBody().getInputStream();
-      return NpmPackage.fromPackage(inputStream);
+      try (InputStream inputStream = responseEntity.getBody().getInputStream()) {
+        return NpmPackage.fromPackage(inputStream);
+      }
     }
     return null;
   }
