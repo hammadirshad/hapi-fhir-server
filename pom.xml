@@ -21,7 +21,7 @@
   <properties>
     <java.version>25</java.version>
     <hapi.version>8.8.1</hapi.version>
-    <hapi-hl7.version>6.7.9</hapi-hl7.version>
+    <hapi-hl7.version>6.9.7</hapi-hl7.version>
     <Saxon-HE.version>12.9</Saxon-HE.version>
     <spring-boot.version>4.0.5</spring-boot.version>
     <spring-xml.version>5.0.1</spring-xml.version>
