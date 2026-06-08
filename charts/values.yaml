@@ -1,7 +1,7 @@
 server:
   name: hapi-fhir-server
   image:
-    name: hapi-fhir-server-build
+    name: hapi-fhir-server
     tag: latest
 
 image:
