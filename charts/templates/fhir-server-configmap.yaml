@@ -8,6 +8,10 @@ metadata:
   {{- include "fhir.server.labels" . | nindent 4 }}
 data:
   application-kubernetes.yml: |-
+    hapi:
+      fhir:
+        server:
+          address: https://{{ .Values.ingress.host }}/fhir/hapi
     server:
       port: 8080
       shutdown: graceful

@@ -20,7 +20,7 @@ spec:
         checksum/configmap-fhir-server: {{ include (print $.Template.BasePath "/fhir-server-configmap.yaml") . | sha256sum }}
     spec:
       nodeSelector:
-        "beta.kubernetes.io/os": linux
+        "kubernetes.io/os": linux
       containers:
         - name: {{ .Values.deployment.server.container.name }}
           image: "{{ .Values.image.registry }}/{{ .Values.server.image.name }}:{{ .Values.server.image.tag }}"
@@ -64,7 +64,7 @@ spec:
       volumes:
         - name: fhir-server-properties
           configMap:
-            name: fhir-server
+            name: {{ .Values.server.name }}
       {{- include "logs.volume" . | nindent 8 }}
       imagePullSecrets:
         - name: {{ .Values.image.pullSecretName }}
