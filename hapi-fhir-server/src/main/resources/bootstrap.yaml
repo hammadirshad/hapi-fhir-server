@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: hapi-fhir-server
+  cloud:
+    discovery:
+      enabled: false
+    kubernetes:
+      enabled: false
+---
+spring:
+  config:
+    activate:
+      on-profile: kubernetes
+  cloud:
+    kubernetes:
+      enabled: true
+      config:
+        name: ${spring.application.name}
+        enabled: true

@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: fhir-server
+  name: {{ .Values.server.name }}
   namespace: {{ .Release.Namespace }}
   labels:
   {{- include "fhir.server.labels" . | nindent 4 }}
