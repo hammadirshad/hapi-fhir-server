@@ -109,7 +109,7 @@ public class SimpleRestfulServer extends RestfulServer {
     }
 
     String serverAddress = applicationProperties.getServer().getAddress();
-    if (!Strings.isNullOrEmpty(serverAddress)) {
+    if (serverAddress!=null && !Strings.isNullOrEmpty(serverAddress)) {
       setServerAddressStrategy(new HardcodedServerAddressStrategy(serverAddress));
     } else {
       setServerAddressStrategy(new IncomingRequestAddressStrategy());
