@@ -22,6 +22,7 @@ public class IndexController {
     if (serverAddress == null || serverAddress.isBlank()) {
       serverAddress = ServletUriComponentsBuilder
           .fromCurrentContextPath()
+          .path(applicationProperties.getServer().getPath())
           .build()
           .toUriString();
     }
